@@ -1,4 +1,5 @@
-import { authApplication } from "../../../dependences";
+import GenerateAccessTokenDto from "./../../../application/dto/GenerateAccessToken.dto";
+import { authApplication, tokenApplication } from "../../../dependences";
 import { controllerBuilder } from "./../../../utils/catchAsync";
 
 export const LoginController = controllerBuilder(async (req) => {
@@ -8,3 +9,11 @@ export const LoginController = controllerBuilder(async (req) => {
 
   return result;
 });
+
+export const RefreshTokenController = controllerBuilder(
+  async (_, { locals: { refreshToken } }) => {
+    return tokenApplication.generateAccessToken(
+      new GenerateAccessTokenDto(refreshToken!),
+    );
+  },
+);

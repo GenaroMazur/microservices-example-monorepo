@@ -32,10 +32,10 @@ export default class AuthApplication {
     }
 
     const refreshToken = this.tokenApplication.generateRefreshToken(
-      new GenerateRefreshTokenDto(),
+      new GenerateRefreshTokenDto({ userId: user.id }),
     );
     const accessToken = this.tokenApplication.generateAccessToken(
-      new GenerateAccessTokenDto({ username: user.username }),
+      new GenerateAccessTokenDto({ userId: user.id }),
     );
 
     return { accessToken, refreshToken };

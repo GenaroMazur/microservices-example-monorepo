@@ -3,6 +3,7 @@ import AccessToken from "../domain/entity/AccessToken";
 import RefreshToken from "../domain/entity/RefreshToken";
 import GenerateAccessTokenDto from "./dto/GenerateAccessToken.dto";
 import GenerateRefreshTokenDto from "./dto/GenerateRefreshToken.dto";
+import { BadRequestException } from "../utils/exceptions";
 
 export default class TokenApplication {
   constructor(
@@ -20,11 +21,15 @@ export default class TokenApplication {
   }
 
   validateAccessToken(accessToken: string): AccessToken {
-    const payload = verify(accessToken, this.PUBLIC_KEY, {
-      algorithms: ["RS256"],
-    }) as JwtPayload;
+    try {
+      const payload = verify(accessToken, this.PUBLIC_KEY, {
+        algorithms: ["RS256"],
+      }) as JwtPayload;
 
-    return new AccessToken(Object(payload));
+      return new AccessToken(Object(payload));
+    } catch {
+      throw new BadRequestException("Invalid token provided");
+    }
   }
 
   generateRefreshToken(
@@ -37,11 +42,15 @@ export default class TokenApplication {
   }
 
   validateRefreshToken(refreshToken: string): RefreshToken {
-    verify(refreshToken, this.PUBLIC_KEY, {
-      algorithms: ["RS256"],
-    }) as JwtPayload;
+    try {
+      const payload = verify(refreshToken, this.PUBLIC_KEY, {
+        algorithms: ["RS256"],
+      }) as JwtPayload;
 
-    return new RefreshToken();
+      return new RefreshToken(Object(payload));
+    } catch {
+      throw new BadRequestException("Invalid token provided");
+    }
   }
 
   getJwks(): {

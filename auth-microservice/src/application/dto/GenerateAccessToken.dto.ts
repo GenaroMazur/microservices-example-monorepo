@@ -1,12 +1,12 @@
 export default class GenerateAccessTokenDto {
-  constructor({ username }: { username: string }) {
-    this.username = username;
+  constructor({ userId }: { userId: number }) {
+    this.userId = userId;
   }
-  username: string;
+  userId: number;
 
   public toObject() {
     return {
-      username: this.username,
+      userId: this.userId,
     };
   }
 }

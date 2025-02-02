@@ -1,5 +1,13 @@
 export default class GenerateRefreshTokenDto {
+  userId: number;
+
+  constructor({ userId }: { userId: number }) {
+    this.userId = userId;
+  }
+
   toObject(): object {
-    return {};
+    return {
+      userId: this.userId,
+    };
   }
 }

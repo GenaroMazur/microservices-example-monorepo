@@ -1,9 +1,7 @@
 export default class AccessToken {
-  id: string;
-  username: string;
+  userId: number;
 
-  constructor({ id, username }: { id: string; username: string }) {
-    this.id = id;
-    this.username = username;
+  constructor({ userId }: { userId: number }) {
+    this.userId = userId;
   }
 }
