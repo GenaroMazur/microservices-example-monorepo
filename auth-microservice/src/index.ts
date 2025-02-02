@@ -52,4 +52,18 @@ expressServer.app.use(errorPage);
 
 core.expressServer = expressServer;
 
-core.start();
+import User from "./domain/entity/User";
+import { bcryptPasswordEncoder } from "./dependences";
+core.start().then(async ({ dataSources }) => {
+  const userRepository = dataSources!.getRepository(User);
+
+  const someUser = (await userRepository.find())[0];
+  if (!someUser) {
+    const admin = new User();
+
+    admin.username = "admin";
+    admin.password = await bcryptPasswordEncoder.encode("admin");
+
+    await userRepository.save(admin);
+  }
+});

@@ -54,7 +54,7 @@ if (NODE_ENV === "production") {
   SALT = 5;
 }
 
-const bcryptPasswordEncoder = new PasswordEncoderApplication(SALT);
+export const bcryptPasswordEncoder = new PasswordEncoderApplication(SALT);
 
 const userRepository = Core.getInstance().dataSources!.getRepository(User);
 
