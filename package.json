@@ -5,7 +5,7 @@
     "dev:some-service": "ts-node-dev --respawn --transpile-only  some-microservice/src/index.ts",
     "dev:all": "concurrently \"npm run dev:gateway\" \"npm run dev:auth\" \"npm run dev:some-service\"",
     "build": "tsc",
-    "fmt": "prettier --write  \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "fmt": "prettier --write  \"**/*.{js,jsx,ts,tsx,css,scss,md}\"",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "lint:fix": "eslint --ext .ts src --fix",
     "start:gateway": "node dist/api-gateway/src/index.js",
