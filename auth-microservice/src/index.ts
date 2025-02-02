@@ -14,7 +14,8 @@ import ExpressServer from "./infrastructure/express.server";
 import { getEnvironments } from "./utils/getEnvironments.utils";
 
 const PORT = Number(getEnvironments(Environments.AUTH_MICROSERVICE_PORT));
-if (Number.isNaN(PORT)) throw new Error("Invalid port");
+if (Number.isNaN(PORT) || PORT < 1 || PORT > 65535)
+  throw new Error("Invalid port");
 
 const expressServer = new ExpressServer(PORT);
 

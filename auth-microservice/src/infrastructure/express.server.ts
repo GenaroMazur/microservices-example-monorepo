@@ -23,11 +23,17 @@ export default class ExpressServer implements CoreModuleI {
   }
 
   stop(): this | Promise<this> {
-    if (this.server) {
-      this.server.close(() => {
-        logger.warn("Server stopped");
+    if (!this.server) return this;
+
+    return new Promise<this>((resolve, reject) => {
+      this.server!.close((err) => {
+        if (err) {
+          logger.error("Error closing server");
+          reject(this);
+        }
+        resolve(this);
+        logger.warn("Http Server stopped");
       });
-    }
-    return this;
+    });
   }
 }
