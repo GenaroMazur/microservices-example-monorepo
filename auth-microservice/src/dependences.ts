@@ -1,6 +1,7 @@
 import AuthApplication from "./application/Auth.application";
 import PasswordEncoderApplication from "./application/PasswordEncoder.application";
 import TokenApplication from "./application/Token.application";
+import UserApplication from "./application/User.application";
 import User from "./domain/entity/User";
 import { Environments } from "./enums/Environments.enum";
 import Core from "./infrastructure/Core";
@@ -60,6 +61,11 @@ const userRepository = Core.getInstance().dataSources!.getRepository(User);
 
 export const authApplication = new AuthApplication(
   tokenApplication,
+  userRepository,
+  bcryptPasswordEncoder,
+);
+
+export const userApplication = new UserApplication(
   userRepository,
   bcryptPasswordEncoder,
 );

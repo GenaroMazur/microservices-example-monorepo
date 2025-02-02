@@ -14,7 +14,10 @@ export default class AuthApplication {
   ) {}
 
   async login(username: string, password: string) {
-    const user = await this.userRepository.findOneBy({ username });
+    const user = await this.userRepository.findOne({
+      where: { username },
+      select: ["password"],
+    });
 
     if (!user) {
       throw new BadRequestException("invalid credentials");
