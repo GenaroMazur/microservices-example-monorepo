@@ -1,5 +1,9 @@
+import AuthApplication from "./application/Auth.application";
+import PasswordEncoderApplication from "./application/PasswordEncoder.application";
 import TokenApplication from "./application/Token.application";
+import User from "./domain/entity/User";
 import { Environments } from "./enums/Environments.enum";
+import Core from "./infrastructure/Core";
 import { generatePairKeys } from "./utils/generatePairKeys.utils";
 import { getEnvironments } from "./utils/getEnvironments.utils";
 import { readFileSync } from "fs";
@@ -40,4 +44,22 @@ export const tokenApplication = new TokenApplication(
   PUBLIC_KEY,
   REFRESH_TOKEN_EXPIRATION,
   ACCESS_TOKEN_EXPIRATION,
+);
+
+let SALT: number;
+
+if (NODE_ENV === "production") {
+  SALT = 12;
+} else {
+  SALT = 5;
+}
+
+const bcryptPasswordEncoder = new PasswordEncoderApplication(SALT);
+
+const userRepository = Core.getInstance().dataSources!.getRepository(User);
+
+export const authApplication = new AuthApplication(
+  tokenApplication,
+  userRepository,
+  bcryptPasswordEncoder,
 );

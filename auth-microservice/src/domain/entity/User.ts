@@ -1,19 +1,13 @@
-export default class User {
-  id: number;
-  username: string;
-  password: string;
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-  constructor({
-    id,
-    username,
-    password,
-  }: {
-    id: number;
-    username: string;
-    password: string;
-  }) {
-    this.id = id;
-    this.username = username;
-    this.password = password;
-  }
+@Entity()
+export default class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column("varchar", { length: 50 })
+  username: string;
+
+  @Column()
+  password: string;
 }
