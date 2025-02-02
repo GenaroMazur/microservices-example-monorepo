@@ -18,6 +18,11 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { helmetOptions } from "./utils/helmet.options";
 import { logger } from "./utils/logger";
+import IndexRouter from "./handlers/http/routes/Index.routes";
+import {
+  errorPage,
+  notFound,
+} from "./handlers/http/controllers/index.controller";
 
 const PORT = Number(getEnvironments(Environments.AUTH_MICROSERVICE_PORT));
 if (Number.isNaN(PORT) || PORT < 1 || PORT > 65535)
@@ -35,6 +40,10 @@ expressServer.app.use(
     stream: { write: (message) => logger.http(message.replace("\n", "")) },
   }),
 );
+
+expressServer.app.use("/", IndexRouter);
+expressServer.app.use(notFound);
+expressServer.app.use(errorPage);
 
 const core = Core.getInstance();
 
