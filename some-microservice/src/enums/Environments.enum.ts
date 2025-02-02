@@ -1,0 +1,5 @@
+export enum Environments {
+  NODE_ENV = "NODE_ENV",
+  SOME_MICROSERVICE_PORT = "SOME_MICROSERVICE_PORT",
+  LOG_LEVEL = "LOG_LEVEL",
+}
