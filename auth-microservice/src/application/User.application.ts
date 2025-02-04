@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import User from "../domain/entity/User";
 import { PasswordEncoderInterface } from "../interfaces/PasswordEncoder";
 import { BadRequestException, NotFoundException } from "../utils/exceptions";
+import CreateUserDto from "./dto/CreateUser.dto";
 
 export default class UserApplication {
   constructor(
@@ -12,10 +13,10 @@ export default class UserApplication {
   async createAdminIfNotExists(): Promise<void> {
     const someUser = (await this.userRepository.find())[0];
     if (!someUser) {
-      const admin = new User();
-
-      admin.username = "admin";
-      admin.password = await this.passwordEncoder.encode("admin");
+      const admin = User.Builder()
+        .username("admin")
+        .password(await this.passwordEncoder.encode("admin"))
+        .build();
 
       await this.userRepository.save(admin);
     }
@@ -31,8 +32,12 @@ export default class UserApplication {
     return this.userRepository.findOneBy({ id });
   }
 
-  async createUser(user: User) {
-    user.password = await this.passwordEncoder.encode(user.password);
+  async createUser(createUserDto: CreateUserDto) {
+    const user = User.Builder()
+      .username(createUserDto.username)
+      .password(await this.passwordEncoder.encode(createUserDto.password))
+      .build();
+
     return this.userRepository.save(user);
   }
 

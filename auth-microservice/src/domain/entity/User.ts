@@ -28,4 +28,38 @@ export default class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  static Builder() {
+    return new UserBuilder();
+  }
+}
+
+class UserBuilder {
+  private user: User;
+
+  constructor() {
+    this.user = new User();
+
+    this.user.updatedAt = new Date();
+    this.user.createdAt = new Date();
+  }
+
+  id(id: number) {
+    this.user.id = id;
+    return this;
+  }
+
+  username(username: string) {
+    this.user.username = username;
+    return this;
+  }
+
+  password(password: string) {
+    this.user.password = password;
+    return this;
+  }
+
+  build() {
+    return this.user;
+  }
 }
