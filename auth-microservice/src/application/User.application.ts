@@ -3,6 +3,7 @@ import User from "../domain/entity/User";
 import { PasswordEncoderInterface } from "../interfaces/PasswordEncoder";
 import { BadRequestException, NotFoundException } from "../utils/exceptions";
 import CreateUserDto from "./dto/CreateUser.dto";
+import UpdateUserDto from "./dto/UpdateUser.dto";
 
 export default class UserApplication {
   constructor(
@@ -41,14 +42,14 @@ export default class UserApplication {
     return this.userRepository.save(user);
   }
 
-  async updateUser(id: number, user: Partial<User>) {
+  async updateUser(id: number, user: UpdateUserDto) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     if (!userToUpdate) {
       throw new NotFoundException("User not found");
     }
 
     if (user.password) {
-      user.password = await this.passwordEncoder.encode(user.password);
+      userToUpdate.password = await this.passwordEncoder.encode(user.password);
     }
 
     if (user.username && user.username !== userToUpdate.username) {
@@ -64,11 +65,13 @@ export default class UserApplication {
   }
 
   async deleteUser(id: number) {
-    const userToDelete = await this.userRepository.softDelete({ id });
-    if (!userToDelete) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
       throw new NotFoundException("User not found");
     }
 
-    return userToDelete;
+    await this.userRepository.softDelete({ id });
+
+    return user;
   }
 }

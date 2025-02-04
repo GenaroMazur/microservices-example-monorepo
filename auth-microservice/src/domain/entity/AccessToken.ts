@@ -1,6 +1,6 @@
 export default class AccessToken {
-  userId: number;
-  type = "ACCESS";
+  readonly userId: number;
+  readonly type = "ACCESS";
 
   constructor({ userId }: { userId: number }) {
     this.userId = userId;

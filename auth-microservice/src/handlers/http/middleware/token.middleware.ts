@@ -14,6 +14,9 @@ export const AccessTokenMiddleware = controllerBuilder((req, res, next) => {
   }
 
   const token = tokenApplication.validateAccessToken(accessToken);
+  if (token.type !== "ACCESS")
+    throw new ForbiddenException("Invalid token provided");
+
   res.locals.accessToken = token;
   next();
 }, "AccessTokenMiddleware");
@@ -30,6 +33,9 @@ export const RefreshTokenMiddleware = controllerBuilder((req, res, next) => {
   }
 
   const token = tokenApplication.validateRefreshToken(refreshToken);
+  if (token.type !== "REFRESH")
+    throw new ForbiddenException("Invalid token provided");
+
   res.locals.refreshToken = token;
   next();
 });
