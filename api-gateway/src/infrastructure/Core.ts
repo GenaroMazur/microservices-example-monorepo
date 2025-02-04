@@ -2,6 +2,8 @@ import { CoreModuleI } from "../interfaces/Core.modules";
 import ExpressServer from "./express.server";
 
 export default class Core implements CoreModuleI {
+  static intervals: NodeJS.Timeout[] = [];
+
   //singleton
   private static instance: Core;
   public static getInstance(): Core {
@@ -20,6 +22,10 @@ export default class Core implements CoreModuleI {
     return this;
   }
   async stop(): Promise<this> {
+    Core.intervals.forEach((interval) => {
+      clearInterval(interval);
+    });
+
     await this.expressServer?.stop();
 
     return this;
