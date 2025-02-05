@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { logger } from "../../../utils/logger";
-import { controllerBuilder } from "./../../../utils/catchAsync";
-import { AppError } from "./../../../utils/exceptions";
-import { Environments } from "./../../../enums/Environments.enum";
-import { getEnvironments } from "./../../../utils/getEnvironments.utils";
-import { endpointResponse } from "./../../../utils/success";
-import { tokenApplication } from "../../../dependences";
+import { logger } from "../../utils/logger";
+import { controllerBuilder } from "./../../utils/catchAsync";
+import { AppError } from "./../../utils/exceptions";
+import { Environments } from "./../../enums/Environments.enum";
+import { getEnvironments } from "./../../utils/getEnvironments.utils";
+import { endpointResponse } from "./../../utils/success";
 
 export const checkAlive = controllerBuilder((req) => {
   req.statusMessage = "server is on!";
@@ -51,8 +50,4 @@ export const errorPage = (
     code: 500,
     body,
   });
-};
-
-export const jwksController = async (_: unknown, res: Response) => {
-  res.json(await tokenApplication.getJwks());
 };

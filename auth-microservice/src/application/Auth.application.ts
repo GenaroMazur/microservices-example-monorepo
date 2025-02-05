@@ -16,7 +16,7 @@ export default class AuthApplication {
   async login(username: string, password: string) {
     const user = await this.userRepository.findOne({
       where: { username },
-      select: ["password"],
+      select: ["password", "id"],
     });
 
     if (!user) {
@@ -34,7 +34,7 @@ export default class AuthApplication {
     const refreshToken = this.tokenApplication.generateRefreshToken(
       new GenerateRefreshTokenDto({ userId: user.id }),
     );
-    const accessToken = this.tokenApplication.generateAccessToken(
+    const accessToken = await this.tokenApplication.generateAccessToken(
       new GenerateAccessTokenDto({ userId: user.id }),
     );
 

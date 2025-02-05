@@ -4,6 +4,7 @@ import RefreshToken from "../domain/entity/RefreshToken";
 import GenerateAccessTokenDto from "./dto/GenerateAccessToken.dto";
 import GenerateRefreshTokenDto from "./dto/GenerateRefreshToken.dto";
 import { BadRequestException } from "../utils/exceptions";
+import nodeJose from "node-jose";
 
 export default class TokenApplication {
   constructor(
@@ -13,10 +14,13 @@ export default class TokenApplication {
     public ACCESS_TOKEN_EXPIRATION: string,
   ) {}
 
-  generateAccessToken(generateAccessTokenDto: GenerateAccessTokenDto): string {
+  async generateAccessToken(
+    generateAccessTokenDto: GenerateAccessTokenDto,
+  ): Promise<string> {
     return sign(generateAccessTokenDto.toObject(), this.PRIVATE_KEY, {
       expiresIn: this.ACCESS_TOKEN_EXPIRATION as unknown as number,
       algorithm: "RS256",
+      keyid: (await this.getJwks()).keys[0]!.kid,
     });
   }
 
@@ -53,7 +57,7 @@ export default class TokenApplication {
     }
   }
 
-  getJwks(): {
+  async getJwks(): Promise<{
     keys: {
       kty: string;
       e: string;
@@ -62,17 +66,11 @@ export default class TokenApplication {
       alg: string;
       n: string;
     }[];
-  } {
+  }> {
     return {
       keys: [
-        {
-          kty: "RSA",
-          e: "AQAB",
-          use: "sig",
-          kid: "1",
-          alg: "RS256",
-          n: this.PUBLIC_KEY,
-        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (await nodeJose.JWK.asKey(this.PUBLIC_KEY, "pem")).toJSON() as any,
       ],
     };
   }

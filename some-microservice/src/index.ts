@@ -12,6 +12,8 @@ import { Environments } from "./enums/Environments.enum";
 import Core from "./infrastructure/Core";
 import ExpressServer from "./infrastructure/express.server";
 import { getEnvironments } from "./utils/getEnvironments.utils";
+import IndexRouter from "./handlers/routes/Index.routes";
+import { errorPage, notFound } from "./handlers/controller/index.controller";
 
 const PORT = Number(getEnvironments(Environments.SOME_MICROSERVICE_PORT));
 if (Number.isNaN(PORT) || PORT < 1 || PORT > 65535)
@@ -20,6 +22,10 @@ if (Number.isNaN(PORT) || PORT < 1 || PORT > 65535)
 const expressServer = new ExpressServer(PORT);
 
 const core = Core.getInstance();
+
+expressServer.app.use("/", IndexRouter);
+expressServer.app.use(notFound);
+expressServer.app.use(errorPage);
 
 core.expressServer = expressServer;
 
